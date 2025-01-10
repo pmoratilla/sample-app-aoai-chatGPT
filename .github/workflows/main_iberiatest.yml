@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://pmtestcontainerregistry.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_9d92e822df514d7f93dc0154e6270e30 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_563dfbb2b4614403b9c763f4b6ef7687 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_af4ab72a96e44d92a311c0f702d3deb5 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_619b813253ec49d98955086dc9aaa3fa }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: pmtestcontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_9d92e822df514d7f93dc0154e6270e30 }}/sample-app-aoai-chatgpt:${{ github.sha }}
+        tags: pmtestcontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_af4ab72a96e44d92a311c0f702d3deb5 }}/sampleappaoaichatgpt.azurecr.io/sample-app-aoai-chatgpt:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'iberiatest'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_bfc14fdd6eee4fc6ad2c9b9a0e51aa8d }}
-        images: 'pmtestcontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_9d92e822df514d7f93dc0154e6270e30 }}/sample-app-aoai-chatgpt:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_3e2cf8d7b5b64f05baf85f166186ff5a }}
+        images: 'pmtestcontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_af4ab72a96e44d92a311c0f702d3deb5 }}/sampleappaoaichatgpt.azurecr.io/sample-app-aoai-chatgpt:${{ github.sha }}'
