@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - IberiaTestWritingAssists
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://pmtestcontainerregistry.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_09b2162367934d94b9a8b28678b04a0e }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_5a96cb93108b48d9ba627ac7693c86c9 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: pmtestcontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_09b2162367934d94b9a8b28678b04a0e }}/sample-gpt:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'IberiaTestWritingAssists'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2eabadb58b1647c7902e115f00b27894 }}
+        images: 'pmtestcontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_09b2162367934d94b9a8b28678b04a0e }}/sample-gpt:${{ github.sha }}'
