@@ -24,5 +24,4 @@ jobs:
     - name: Run build
       run: npm run build  # Run the build script defined in your package.json
 
-    - name: Deploy (Optional)
-      run: echo "Deploy your app here"
+  
