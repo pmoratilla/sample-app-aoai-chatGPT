@@ -1,0 +1,28 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main  # This triggers the build when changes are pushed to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # The environment for the workflow
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Checkout the code from your repository
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2  # Set up Node.js environment
+      with:
+        node-version: '16'  # You can specify the Node.js version you want
+
+    - name: Install dependencies
+      run: npm install  # Install dependencies using npm
+
+    - name: Run build
+      run: npm run build  # Run the build script defined in your package.json
+
+    - name: Deploy (Optional)
+      run: echo "Deploy your app here"
